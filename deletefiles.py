@@ -1,20 +1,18 @@
 #!/usr/bin/env python
 import os, time, sys
-import shutil
+
 
 def deleteFile(days,path):
   input_args = locals()
   print("input arguments are", input_args)
   now = time.time()
-  for f in os.listdir(path):
-    f = os.path.join(path, f) 
-    if os.stat(f).st_mtime < now - int(days) * 86400:
-     print(f)
-     shutil.rmtree(f)
-     os.remove(f)
-     os.rmdir(f)
-     
-     
+  for root, dirs, files in os.walk(path, topdown=False):
+    if os.stat(path).st_mtime < now - int(days) * 86400:
+     for name in files:
+        os.remove(os.path.join(root, name))
+     for name in dirs:
+        os.rmdir(os.path.join(root, name))
+     print(os.stat(path).st_mtime)
 params=sys.argv;
 if len(params)>1:
  deleteFile (params[1],params[2])
